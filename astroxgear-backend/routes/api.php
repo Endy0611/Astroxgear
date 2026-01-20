@@ -25,10 +25,22 @@ Route::get('/products/on-sale/list', [ProductController::class, 'onSale']);
 // Categories
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
+Route::post('/categories', [CategoryController::class, 'store']);
+Route::put('/categories/{id}', [CategoryController::class, 'update']);
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
 // Brands
 Route::get('/brands', [BrandController::class, 'index']);
+Route::post('/brands', [BrandController::class, 'store']);
 Route::get('/brands/{id}', [BrandController::class, 'show']);
+Route::put('/brands/{id}', [BrandController::class, 'update']);
+Route::delete('/brands/{id}', [BrandController::class, 'destroy']);
+// Products
+Route::get('/products', [ProductController::class, 'index']);
+Route::post('/products', [ProductController::class, 'store']);
+Route::put('/products/{id}', [ProductController::class, 'update']);
+Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

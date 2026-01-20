@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('tblbrand', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('category_id')->nullable(); // ← Add this line
             $table->string('brand_name');
             $table->string('brand_slug')->unique();
             $table->text('brand_description')->nullable();
@@ -17,6 +18,9 @@ return new class extends Migration
             $table->string('brand_website')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            
+            // ← Add this foreign key constraint
+            $table->foreign('category_id')->references('id')->on('tblcategory')->onDelete('cascade');
         });
     }
 

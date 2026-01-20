@@ -25,7 +25,13 @@ class Category extends Model
         'is_active' => 'boolean',
     ];
 
-    // Relationships
+    // Category has many Brands
+    public function brands()
+    {
+        return $this->hasMany(Brand::class, 'category_id');
+    }
+
+    // Category has many Products
     public function products()
     {
         return $this->hasMany(Product::class, 'category_id');

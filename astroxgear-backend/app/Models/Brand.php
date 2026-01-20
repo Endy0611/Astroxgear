@@ -12,6 +12,7 @@ class Brand extends Model
     protected $table = 'tblbrand';
 
     protected $fillable = [
+        'category_id',  // ← Add this line
         'brand_name',
         'brand_slug',
         'brand_description',
@@ -24,6 +25,13 @@ class Brand extends Model
         'is_active' => 'boolean',
     ];
 
+    // Brand belongs to Category
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    // Brand has many Products
     public function products()
     {
         return $this->hasMany(Product::class, 'brand_id');
