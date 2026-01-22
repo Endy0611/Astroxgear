@@ -13,6 +13,12 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'bakong' => [
+    'base_url'    => env('BAKONG_BASE_URL'),
+    'merchant_id' => env('BAKONG_MERCHANT_ID'),
+    'api_key'     => env('BAKONG_API_KEY'),
+],
+
 
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
