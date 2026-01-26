@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,31 +13,58 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // API middleware - no cookie encryption needed for Firebase auth
+
+        /**
+         * ------------------------------------------------------------
+         * GLOBAL MIDDLEWARE
+         * ------------------------------------------------------------
+         */
+        // ✅ ENABLE CORS (THIS IS THE KEY FIX)
+        $middleware->append(HandleCors::class);
+
+        /**
+         * ------------------------------------------------------------
+         * API MIDDLEWARE
+         * ------------------------------------------------------------
+         */
         $middleware->api(prepend: [
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
-        // Web middleware
+        /**
+         * ------------------------------------------------------------
+         * WEB MIDDLEWARE
+         * ------------------------------------------------------------
+         */
         $middleware->web(append: [
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         ]);
 
-        // Middleware aliases
+        /**
+         * ------------------------------------------------------------
+         * MIDDLEWARE ALIASES
+         * ------------------------------------------------------------
+         */
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'firebase' => \App\Http\Middleware\FirebaseAuth::class, 
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         ]);
 
-        // CORS configuration for Firebase
+        /**
+         * ------------------------------------------------------------
+         * CSRF (API DOES NOT NEED CSRF)
+         * ------------------------------------------------------------
+         */
         $middleware->validateCsrfTokens(except: [
-            'api/*', // Exclude API routes from CSRF
+            'api/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();

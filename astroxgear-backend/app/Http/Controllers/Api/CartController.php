@@ -15,13 +15,37 @@ class CartController extends Controller
             ->where('user_id', $request->user()->id)
             ->get();
 
+        // Transform the cart items to match frontend expectations
+        $items = $cart->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product->product_name,  // Changed from 'name'
+                'product_image' => $item->product->product_image, // Changed from 'image'
+                'product_slug' => $item->product->product_slug,   // Changed from 'slug'
+                'price' => $item->price,
+                'quantity' => $item->quantity,
+                'stock_quantity' => $item->product->stock_quantity,
+            ];
+        });
+
         $total = $cart->sum(function ($item) {
             return $item->price * $item->quantity;
         });
 
         return response()->json([
-            'cart' => $cart,
+            'items' => $items,
             'total' => $total,
+        ]);
+    }
+
+    public function count(Request $request)
+    {
+        $count = Cart::where('user_id', $request->user()->id)
+            ->sum('quantity');
+
+        return response()->json([
+            'count' => $count
         ]);
     }
 
@@ -46,7 +70,17 @@ class CartController extends Controller
             ->first();
 
         if ($cartItem) {
-            $cartItem->quantity += $request->quantity;
+            // Update existing cart item
+            $newQuantity = $cartItem->quantity + $request->quantity;
+            
+            // Check total quantity against stock
+            if ($product->stock_quantity < $newQuantity) {
+                return response()->json([
+                    'message' => 'Insufficient stock. You already have ' . $cartItem->quantity . ' in cart.'
+                ], 400);
+            }
+            
+            $cartItem->quantity = $newQuantity;
             $cartItem->save();
         } else {
             $cartItem = Cart::create([

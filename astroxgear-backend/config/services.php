@@ -13,31 +13,33 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
-    'bakong' => [
-    'base_url'    => env('BAKONG_BASE_URL'),
-    'merchant_id' => env('BAKONG_MERCHANT_ID'),
-    'api_key'     => env('BAKONG_API_KEY'),
-],
-
+    'bakong'   => [
+        'base_url'    => env('BAKONG_BASE_URL'),
+        'merchant_id' => env('BAKONG_MERCHANT_ID'),
+        'api_key'     => env('BAKONG_API_KEY'),
+    ],
+    'firebase' => [
+        'credentials' => base_path('firebase-credentials.json'),
+    ],
 
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],
 
-    'resend' => [
+    'resend'   => [
         'key' => env('RESEND_API_KEY'),
     ],
 
-    'ses' => [
-        'key' => env('AWS_ACCESS_KEY_ID'),
+    'ses'      => [
+        'key'    => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'slack' => [
+    'slack'    => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
+            'channel'              => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
 
